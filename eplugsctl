@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# set variables
+installDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# set usage
+USAGE="usage: $(basename $0) {start|stop}"
+
+# check for input
+case $1 in
+    start)
+        cd $installDir
+        if [ ! -d logs ]; then
+            mkdir logs
+        fi
+        # background the main app and write STDOUT to logfile
+        nohup ./eplugs.py >> $installDir/logs/eplugs.log 2>&1 &
+        echo $! > /var/run/eplugs.pid
+        if [[ $? == 0 ]]; then
+            echo "eplugs started OK."
+        fi
+        ;;
+    stop)
+        kill $(cat /var/run/eplugs.pid)
+        rm /var/run/eplugs.pid
+        ;;
+    *)
+        echo $USAGE
+        ;;
+esac
+
