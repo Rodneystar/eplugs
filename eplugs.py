@@ -9,10 +9,7 @@ app = Flask(__name__)
 def eplug_switch(plug_id, onoff):
     valid_onoff = ['on', 'off']
     valid_plug_id = [0, 1, 2, 3, 4]
-    print plug_id
-    print onoff
     if ( plug_id in valid_plug_id ) and ( onoff in valid_onoff ):
-        print 'if statement'
         es.esocket(plug_id, onoff)
     return "all good"
 
