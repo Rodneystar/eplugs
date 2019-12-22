@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python 
+
 import esocket as es
 from flask import Flask, render_template, redirect
 
@@ -10,7 +11,7 @@ def eplug_switch(plug_id, onoff):
     valid_plug_id = [0, 1, 2, 3, 4]
     print plug_id
     print onoff
-    if ( str(plug_id) in valid_plug_id ) and ( onoff in valid_onoff ):
+    if ( plug_id in valid_plug_id ) and ( onoff in valid_onoff ):
         print 'if statement'
         es.esocket(plug_id, onoff)
     return "all good"

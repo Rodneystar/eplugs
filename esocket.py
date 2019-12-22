@@ -9,7 +9,7 @@ sockets = {
     0: {
         "on": [True, True, False, True],
         "off": [True, True, False, False]
-    }
+    },
     1: {
         "on": [True, True, True, True],
         "off": [True, True, True, False]
@@ -33,26 +33,26 @@ def esocket(plug_id, onoff):
     # The On/Off code pairs correspond to the hand controller codes.
     # True = '1', False ='0'
     
-    try:
-        # Set K0-K3
-        print "sending code 1111 socket 1 on"
-        GPIO.output (11, sockets[plug_id][onoff][0])
-        GPIO.output (15, sockets[plug_id][onoff][1])
-        GPIO.output (16, sockets[plug_id][onoff][2])
-        GPIO.output (13, sockets[plug_id][onoff][3])
-        # let it settle, encoder requires this
-        time.sleep(0.1)    
-        # Enable the modulator
-        GPIO.output (22, True)
-        # keep enabled for a period
-        time.sleep(0.25)
-        # Disable the modulator
-        GPIO.output (22, False)
+   try:
+       # Set K0-K3
+       print "sending code 1111 socket 1 on"
+       GPIO.output (11, sockets[plug_id][onoff][0])
+       GPIO.output (15, sockets[plug_id][onoff][1])
+       GPIO.output (16, sockets[plug_id][onoff][2])
+       GPIO.output (13, sockets[plug_id][onoff][3])
+       # let it settle, encoder requires this
+       time.sleep(0.1)    
+       # Enable the modulator
+       GPIO.output (22, True)
+       # keep enabled for a period
+       time.sleep(0.25)
+       # Disable the modulator
+       GPIO.output (22, False)
 
     # Clean up the GPIOs for next time
-    except KeyboardInterrupt:
-        GPIO.cleanup()
-    GPIO.cleanup()
+   except KeyboardInterrupt:
+       GPIO.cleanup()
+   GPIO.cleanup()
 
 
 def initialiseGpio() :
@@ -93,7 +93,7 @@ def esocket_cli():
     plug_id = sys.argv[1]
     onoff = sys.argv[2]
     if ( plug_id in valid_plug_id ) and ( onoff in valid_onoff ):
-        esocket((int)plug_id, onoff)
+        esocket(int(plug_id), onoff)
 
 if __name__ == ('__main__'):
     esocket_cli()
