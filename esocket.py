@@ -3,17 +3,60 @@
 import RPi.GPIO as GPIO
 import time
 import sys
-    
-def esocket_cli():
-    valid_onoff = ['on', 'off']
-    valid_plug_id = ['0', '1', '2', '3', '4', 'all']
-    plug_id = sys.argv[1]
-    onoff = sys.argv[2]
-    if ( plug_id in valid_plug_id ) and ( onoff in valid_onoff ):
-        esocket(plug_id, onoff)
+
+
+sockets = {
+    0: {
+        "on": [True, True, False, True],
+        "off": [True, True, False, False]
+    }
+    1: {
+        "on": [True, True, True, True],
+        "off": [True, True, True, False]
+    },
+    2:{
+        "on": [False, True, True, True],
+        "off": [False, True, True, False]
+    },
+    3:{
+        "on": [True, True, False, True],
+        "off": [False, True, False, True]
+    },
+    4:{
+        "on": [True, True, False, False],
+        "off": [False, True, False, False]
+    }
+}
 
 def esocket(plug_id, onoff):
-    # set the pins numbering mode
+   initialiseGpio()
+    # The On/Off code pairs correspond to the hand controller codes.
+    # True = '1', False ='0'
+    
+    try:
+        # Set K0-K3
+        print "sending code 1111 socket 1 on"
+        GPIO.output (11, sockets[plug_id][onoff][0])
+        GPIO.output (15, sockets[plug_id][onoff][1])
+        GPIO.output (16, sockets[plug_id][onoff][2])
+        GPIO.output (13, sockets[plug_id][onoff][3])
+        # let it settle, encoder requires this
+        time.sleep(0.1)    
+        # Enable the modulator
+        GPIO.output (22, True)
+        # keep enabled for a period
+        time.sleep(0.25)
+        # Disable the modulator
+        GPIO.output (22, False)
+
+    # Clean up the GPIOs for next time
+    except KeyboardInterrupt:
+        GPIO.cleanup()
+    GPIO.cleanup()
+
+
+def initialiseGpio() :
+     # set the pins numbering mode
     GPIO.setmode(GPIO.BOARD)
     
     # Select the GPIO pins used for the encoder K0-K3 data inputs
@@ -44,182 +87,13 @@ def esocket(plug_id, onoff):
     # The On/Off code pairs correspond to the hand controller codes.
     # True = '1', False ='0'
     
-    try:
-        if  plug_id == "1":
-            if onoff == "on":
-                # Set K0-K3
-                print "sending code 1111 socket 1 on"
-                GPIO.output (11, True)
-                GPIO.output (15, True)
-                GPIO.output (16, True)
-                GPIO.output (13, True)
-                # let it settle, encoder requires this
-                time.sleep(0.1)    
-                # Enable the modulator
-                GPIO.output (22, True)
-                # keep enabled for a period
-                time.sleep(0.25)
-                # Disable the modulator
-                GPIO.output (22, False)
-    
-        if  plug_id == "1":
-            if  onoff == "off":
-                # Set K0-K3
-                print "sending code 0111 Socket 1 off"
-                GPIO.output (11, True)
-                GPIO.output (15, True)
-                GPIO.output (16, True)
-                GPIO.output (13, False)
-                # let it settle, encoder requires this
-                time.sleep(0.1)
-                # Enable the modulator
-                GPIO.output (22, True)
-                # keep enabled for a period
-                time.sleep(0.25)
-                # Disable the modulator
-                GPIO.output (22, False)
-    
-        if plug_id == "2":
-            if onoff == "on":
-                # Set K0-K3
-                print "sending code 1110 socket 2 on"
-                GPIO.output (11, False)
-                GPIO.output (15, True)
-                GPIO.output (16, True)
-                GPIO.output (13, True)
-                # let it settle, encoder requires this
-                time.sleep(0.1)    
-                # Enable the modulator
-                GPIO.output (22, True)
-                # keep enabled for a period
-                time.sleep(0.25)
-                # Disable the modulator
-                GPIO.output (22, False)
-    
-        if plug_id == "2":
-            if onoff == "off":
-                # Set K0-K3
-                print "sending code 0110 socket 2 off"
-                GPIO.output (11, False)
-                GPIO.output (15, True)
-                GPIO.output (16, True)
-                GPIO.output (13, False)
-                # let it settle, encoder requires this
-                time.sleep(0.1)
-                # Enable the modulator
-                GPIO.output (22, True)
-                # keep enabled for a period
-                time.sleep(0.25)
-                # Disable the modulator
-                GPIO.output (22, False)
-    
-        if plug_id == "3":
-            if  onoff == "on":
-                # Set K0-K3
-                print "sending code 1101 socket 3 on"
-                GPIO.output (11, True)
-                GPIO.output (15, True)
-                GPIO.output (16, False)
-                GPIO.output (13, True)
-                # let it settle, encoder requires this
-                time.sleep(0.1)
-                # Enable the modulator
-                GPIO.output (22, True)
-                # keep enabled for a period
-                time.sleep(0.25)
-                # Disable the modulator
-                GPIO.output (22, False)
-    
-        if  plug_id == "3":
-            if  onoff == "off":
-                # Set K0-K3
-                print "sending code 0101 socket 3 off"
-                GPIO.output (11, False)
-                GPIO.output (15, True)
-                GPIO.output (16, False)
-                GPIO.output (13, True)
-                # let it settle, encoder requires this
-                time.sleep(0.1)
-                # Enable the modulator
-                GPIO.output (22, True)
-                # keep enabled for a period
-                time.sleep(0.25)
-                # Disable the modulator
-                GPIO.output (22, False)
-        
-        if plug_id == "4":
-            if onoff == "on":
-                # Set K0-K3
-                print "sending code 1100 socket 4 on"
-                GPIO.output (11, True)
-                GPIO.output (15, True)
-                GPIO.output (16, False)
-                GPIO.output (13, False)
-                # let it settle, encoder requires this
-                time.sleep(0.1)
-                # Enable the modulator
-                GPIO.output (22, True)
-                # keep enabled for a period
-                time.sleep(0.25)
-                # Disable the modulator
-                GPIO.output (22, False)
-    
-    
-        if  plug_id == "4":
-            if onoff == "off":
-                # Set K0-K3
-                print "sending code 0100 socket 4 off"
-                GPIO.output (11, False)
-                GPIO.output (15, True)
-                GPIO.output (16, False)
-                GPIO.output (13, False)
-                # let it settle, encoder requires this
-                time.sleep(0.1)
-                # Enable the modulator
-                GPIO.output (22, True)
-                # keep enabled for a period
-                time.sleep(0.25)
-                # Disable the modulator
-                GPIO.output (22, False)
-    
-        if ( plug_id == "all" ) or ( plug_id == "0" ):
-            if onoff == "on":
-                # Set K0-K3
-                print "sending code 1011 ALL on"
-                GPIO.output (11, True)
-                GPIO.output (15, True)
-                GPIO.output (16, False)
-                GPIO.output (13, True)
-                # let it settle, encoder requires this
-                time.sleep(0.1)
-                # Enable the modulator
-                GPIO.output (22, True)
-                # keep enabled for a period
-                time.sleep(0.25)
-                # Disable the modulator
-                GPIO.output (22, False)
-        
-        if ( plug_id == "all" ) or ( plug_id == "0" ):
-            if onoff == "off":
-                # Set K0-K3
-                print "sending code 0011 All off"
-                GPIO.output (11, True)
-                GPIO.output (15, True)
-                GPIO.output (16, False)
-                GPIO.output (13, False)
-                # let it settle, encoder requires this
-                time.sleep(0.1)    
-                # Enable the modulator
-                GPIO.output (22, True)
-                # keep enabled for a period
-                time.sleep(0.25)
-                # Disable the modulator
-                GPIO.output (22, False)
-    
-    # Clean up the GPIOs for next time
-    except KeyboardInterrupt:
-        GPIO.cleanup()
-    GPIO.cleanup()
+def esocket_cli():
+    valid_onoff = ['on', 'off']
+    valid_plug_id = ['0', '1', '2', '3', '4']
+    plug_id = sys.argv[1]
+    onoff = sys.argv[2]
+    if ( plug_id in valid_plug_id ) and ( onoff in valid_onoff ):
+        esocket((int)plug_id, onoff)
 
 if __name__ == ('__main__'):
     esocket_cli()
