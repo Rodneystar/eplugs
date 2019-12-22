@@ -1,7 +1,0 @@
-Traceback (most recent call last):
-  File "./eplugs.py", line 2, in <module>
-    import esocket as es
-  File "/home/pi/dev/energenie/eplugs/esocket.py", line 13
-    1: {
-    ^
-SyntaxError: invalid syntax
